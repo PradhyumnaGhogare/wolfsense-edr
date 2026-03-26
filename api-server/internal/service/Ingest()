@@ -1,0 +1,16 @@
+for _, event := range batch.Events {
+	if strings.Contains(event.CommandLine, "EncodedCommand") {
+		alert := model.Alert{
+			ID:         "test-" + event.ID,
+			EndpointID: event.EndpointID,
+			Hostname:   event.Hostname,
+			Title:      "PowerShell Encoded Command",
+			Severity:   "high",
+			Status:     "open",
+			OccurredAt: event.OccurredAt,
+		}
+
+		// 👉 directly DB insert ya publisher use karo
+		fmt.Println("🔥 ALERT GENERATED:", alert.EndpointID)
+	}
+}

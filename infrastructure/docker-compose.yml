@@ -1,0 +1,74 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-edr}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ../database/init:/docker-entrypoint-initdb.d:ro
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  api-server:
+    build:
+      context: ../api-server
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/edr?sslmode=disable
+      REDIS_ADDR: redis:6379
+      REDIS_STREAM_TELEMETRY: ${REDIS_STREAM_TELEMETRY:-edr.telemetry.normalized}
+      REDIS_STREAM_ALERTS: ${REDIS_STREAM_ALERTS:-edr.alerts}
+      INGEST_AUTH_TOKEN: ${INGEST_AUTH_TOKEN:-local-dev-agent-token}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:3000}
+    ports:
+      - "8080:8080"
+
+  detection-engine:
+    build:
+      context: ../detection-engine
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@postgres:5432/edr?sslmode=disable
+      REDIS_ADDR: redis:6379
+      REDIS_STREAM_TELEMETRY: ${REDIS_STREAM_TELEMETRY:-edr.telemetry.normalized}
+      REDIS_STREAM_ALERTS: ${REDIS_STREAM_ALERTS:-edr.alerts}
+      REDIS_CONSUMER_GROUP: ${REDIS_CONSUMER_GROUP:-edr-detection}
+      REDIS_CONSUMER_NAME: ${REDIS_CONSUMER_NAME:-engine-1}
+      ENGINE_RULES_PATH: ${ENGINE_RULES_PATH:-internal/rules/default-rules.json}
+    ports:
+      - "8081:8081"
+
+  dashboard:
+    build:
+      context: ../dashboard
+    depends_on:
+      - api-server
+    environment:
+      API_BASE_URL: http://api-server:8080/api/v1
+      NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8080/api/v1}
+    ports:
+      - "3000:3000"
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.3
+    profiles: ["search"]
+    environment:
+      discovery.type: single-node
+      xpack.security.enabled: "false"
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+    ports:
+      - "9200:9200"
+
+volumes:
+  postgres-data:
