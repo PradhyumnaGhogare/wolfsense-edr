@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # EDR + SOC Platform
 
 This repository contains a production-style Endpoint Detection and Response platform with a SOC dashboard designed around the workflow of enterprise analysts.
@@ -44,3 +45,6 @@ infrastructure/     Docker Compose for local development
 - add mTLS enrollment, device identity, and signed agent manifests for production deployment
 - separate alerting, incident management, and enrichment into independently scalable workers
 - add object storage for forensic artifacts and long-lived process graph snapshots
+=======
+# wolfsense-edr
+>>>>>>> 9d6c448534c0447d2add7c77225bddf98ed90aee
