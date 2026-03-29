@@ -1,4 +1,12 @@
-<<<<<<< HEAD
+## ⚠️ Usage Notice
+
+Wolfsense EDR is a personal research and development project.
+
+The architecture, detection logic, and implementation are original work.
+
+Unauthorized copying, reuse, or redistribution is not permitted without explicit permission.
+
+This project is intended to demonstrate detection engineering concepts and endpoint telemetry analysis.<<<<<<< HEAD
 # EDR + SOC Platform
 
 This repository contains a production-style Endpoint Detection and Response platform with a SOC dashboard designed around the workflow of enterprise analysts.
