@@ -6,53 +6,56 @@ The architecture, detection logic, and implementation are original work.
 
 Unauthorized copying, reuse, or redistribution is not permitted without explicit permission.
 
-This project is intended to demonstrate detection engineering concepts and endpoint telemetry analysis.<<<<<<< HEAD
+This project is intended to demonstrate detection engineering concepts and endpoint telemetry analysis.
+
 # EDR + SOC Platform
 
 This repository contains a production-style Endpoint Detection and Response platform with a SOC dashboard designed around the workflow of enterprise analysts.
 
-## Architecture
+## 🧠 Architecture
+Agent → Backend → Detection Engine → Alert → Dashboard
 
 1. Windows endpoint telemetry is produced by the Go `agent` service and posted to the ingestion API.
 2. The Go `api-server` validates, normalizes, stores telemetry in PostgreSQL, and publishes events to Redis Streams.
 3. The Go `detection-engine` consumes normalized telemetry, applies MITRE-aligned and behavioral rules, enriches with threat intelligence, persists alerts and incidents, and republishes alerts for realtime consumption.
-4. The Next.js `dashboard` renders fleet health, alerts, incidents, threat intel, and MITRE ATT&CK coverage, using the API when available and seeded SOC data as a local fallback.
+4. The Next.js `dashboard` renders fleet health, alerts, incidents, threat intel, and MITRE ATT&CK coverage.
 
-## Repository layout
+## 🚀 Features
 
-```text
-agent/              Windows endpoint telemetry agent in Go
-api-server/         REST API, ingestion layer, websocket fan-out in Go
-dashboard/          Next.js SOC analyst dashboard
-database/           PostgreSQL schema and seed data
-detection-engine/   MITRE rule engine, TI enrichment, incident aggregation
-docs/               Architecture, API, and local runbook
-infrastructure/     Docker Compose for local development
-```
+- Endpoint telemetry collection
+- Behavioral detection logic
+- MITRE ATT&CK mapping
+- Threat intelligence enrichment
+- Real-time SOC dashboard
+- Alert and incident correlation
 
-## Local run
+## 🔍 Detection Use Cases
 
-1. Copy `.env.example` to `.env` and adjust values if needed.
-2. Start infrastructure from [`infrastructure/docker-compose.yml`](/e:/EDR-SOC/infrastructure/docker-compose.yml).
-3. Run the Windows agent on the host or build [`agent/Dockerfile`](/e:/EDR-SOC/agent/Dockerfile) to produce `agent.exe`.
-4. Open the dashboard at `http://localhost:3000`.
+- Credential abuse detection
+- Suspicious process execution
+- Brute force patterns
+- Lateral movement indicators
 
-## Core capabilities
+## 📦 Repository Layout
 
-- endpoint telemetry for process, network, and file behaviors
-- MITRE ATT&CK mapping on every detection
-- behavioral correlation and process chain analysis
-- threat intelligence enrichment for IPs and hashes
-- incident and alert persistence in PostgreSQL
-- realtime SOC dashboard with alerts, incidents, endpoints, TI, and MITRE views
+agent/ — Windows endpoint telemetry agent  
+api-server/ — ingestion + API  
+dashboard/ — SOC UI  
+database/ — PostgreSQL schema  
+detection-engine/ — detection logic  
+docs/ — architecture docs  
+infrastructure/ — docker setup  
 
-## Scaling recommendations
+## ⚙️ Local Setup
 
-- move telemetry retention to hot/warm tiers and offload search-heavy workloads to Elasticsearch or OpenSearch
-- shard detection consumers by tenant or endpoint cohort with multiple Redis or Kafka consumer groups
-- add mTLS enrollment, device identity, and signed agent manifests for production deployment
-- separate alerting, incident management, and enrichment into independently scalable workers
-- add object storage for forensic artifacts and long-lived process graph snapshots
-=======
-# wolfsense-edr
->>>>>>> 9d6c448534c0447d2add7c77225bddf98ed90aee
+1. Copy `.env.example` to `.env`
+2. Run Docker Compose
+3. Start agent
+4. Open dashboard at `http://localhost:3000`
+
+## 📈 Scaling Ideas
+
+- Elasticsearch/OpenSearch for search
+- Kafka/Redis scaling
+- mTLS + device identity
+- artifact storage
