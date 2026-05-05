@@ -1,3 +1,9 @@
+![Go](https://img.shields.io/badge/Go-00ADD8?style=flat&logo=go&logoColor=white)
+![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=next.js)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat&logo=postgresql)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat&logo=redis)
+![MITRE ATT&CK](https://img.shields.io/badge/MITRE-ATT%26CK-red?style=flat)
+
 ## ⚠️ Usage Notice
 
 Wolfsense EDR is a personal research and development project.
